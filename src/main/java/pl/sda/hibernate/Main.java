@@ -7,7 +7,6 @@ import pl.sda.hibernate.model.Pojazd;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.function.Consumer;
 
 /**
  * @author Paweł Recław, AmeN
@@ -16,29 +15,27 @@ import java.util.function.Consumer;
  */
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
         System.out.println("Podaj komende (dodaj / lista / szukaj / usun / aktualizuj):");
-        String komenda = scanner.nextLine();
+        String komenda = JakasKlasa.scanner.nextLine();
 
         if (komenda.equalsIgnoreCase("dodaj")) {
-            obslugaDodaj(scanner);
+            obslugaDodaj();
         } else if (komenda.equalsIgnoreCase("lista")) {
             obslugaLista();
         } else if (komenda.equalsIgnoreCase("szukaj")) {
-            obslugaSzukaj(scanner);
+            obslugaSzukaj();
         } else if (komenda.equalsIgnoreCase("usun")) {
-            obslugaUsun(scanner);
+            obslugaUsun();
         } else if (komenda.equalsIgnoreCase("aktualizuj")) {
-            obslugaAktualizuj(scanner);
+            obslugaAktualizuj();
         } else {
             System.err.println("Nieznana komenda.");
         }
     }
 
-    private static void obslugaAktualizuj(Scanner scanner) {
+    private static void obslugaAktualizuj() {
         System.out.println("Podaj identyfikator szukanego obiektu:");
-        String identyfikator = scanner.nextLine();
+        String identyfikator = JakasKlasa.scanner.nextLine();
         Long id = Long.parseLong(identyfikator);
 
         try (Session session = HibernateUtil.INSTANCE.getSessionFactory().openSession()) {
@@ -48,7 +45,7 @@ public class Main {
             if (pojazd == null) {
                 System.err.println("Rekord nie istnieje.");
             } else {
-                Pojazd daneAktualizującePojazd = wczytajParametryPojazdu(scanner);
+                Pojazd daneAktualizującePojazd = wczytajParametryPojazdu();
                 daneAktualizującePojazd.setId(id);
 
                 session.merge(daneAktualizującePojazd);
@@ -59,9 +56,9 @@ public class Main {
         }
     }
 
-    private static void obslugaUsun(Scanner scanner) {
+    private static void obslugaUsun() {
         System.out.println("Podaj identyfikator usuwanego obiektu:");
-        String identyfikator = scanner.nextLine();
+        String identyfikator = JakasKlasa.scanner.nextLine();
         Long id = Long.parseLong(identyfikator);
 
         try (Session session = HibernateUtil.INSTANCE.getSessionFactory().openSession()) {
@@ -80,9 +77,9 @@ public class Main {
         }
     }
 
-    private static void obslugaSzukaj(Scanner scanner) {
+    private static void obslugaSzukaj() {
         System.out.println("Podaj identyfikator szukanego obiektu:");
-        String identyfikator = scanner.nextLine();
+        String identyfikator = JakasKlasa.scanner.nextLine();
         Long id = Long.parseLong(identyfikator);
 
         try (Session session = HibernateUtil.INSTANCE.getSessionFactory().openSession()) {
@@ -129,8 +126,8 @@ public class Main {
         }
     }
 
-    private static void obslugaDodaj(Scanner scanner) {
-        Pojazd p = wczytajParametryPojazdu(scanner);
+    private static void obslugaDodaj() {
+        Pojazd p = wczytajParametryPojazdu();
 
         try (Session session = HibernateUtil.INSTANCE.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
@@ -143,21 +140,21 @@ public class Main {
         }
     }
 
-    private static Pojazd wczytajParametryPojazdu(Scanner scanner) {
+    private static Pojazd wczytajParametryPojazdu() {
         System.out.println("Podaj markę:");
-        String marka = scanner.nextLine();
+        String marka = JakasKlasa.scanner.nextLine();
 
         System.out.println("Podaj moc:");
-        String mocString = scanner.nextLine();
+        String mocString = JakasKlasa.scanner.nextLine();
         double moc = Double.parseDouble(mocString);
 
         System.out.println("Podaj kolor:");
-        String kolor = scanner.nextLine();
+        String kolor = JakasKlasa.scanner.nextLine();
 
         Integer rokProdukcji = null;
         do {
             System.out.println("Podaj rok produkcji:");
-            String rokProdukcjiString = scanner.nextLine();
+            String rokProdukcjiString = JakasKlasa.scanner.nextLine();
             rokProdukcji = Integer.parseInt(rokProdukcjiString);
 
             if (rokProdukcji < 1990 || rokProdukcji > 2020) {
@@ -167,7 +164,7 @@ public class Main {
         } while (rokProdukcji == null);
 
         System.out.println("Czy jest elektryczny:");
-        String elektrycznyString = scanner.nextLine();
+        String elektrycznyString = JakasKlasa.scanner.nextLine();
         boolean elektryczny = Boolean.parseBoolean(elektrycznyString);
 
         return Pojazd.builder()
